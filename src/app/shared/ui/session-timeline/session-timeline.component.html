@@ -1,0 +1,64 @@
+<section class="space-y-3">
+  @for (session of sessions(); track session.id) {
+    <article class="fc-card space-y-3 p-4">
+      <header class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.12em] text-slate-500">{{ session.sessionAt | date:'dd/MM/yyyy' }}</p>
+          <h3 class="text-sm font-semibold text-slate-900">Sesion {{ sessionTypeLabel(session.type) }}</h3>
+        </div>
+        <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">{{ session.activities.length }} actividades</span>
+      </header>
+
+      <div class="grid gap-2 text-xs text-slate-600 sm:grid-cols-2">
+        <p><strong class="text-slate-700">Duracion total:</strong> {{ totalMinutes(session) || 0 }} min</p>
+        @if (session.borgScale || session.wongBakerScale) {
+          <p>
+            <strong class="text-slate-700">Escalas:</strong>
+            Borg {{ session.borgScale ?? '-' }} · Wong-Baker {{ session.wongBakerScale ?? '-' }}
+          </p>
+        }
+        @if (session.preEffort || session.postEffort) {
+          <p class="sm:col-span-2">
+            <strong class="text-slate-700">Vitales:</strong>
+            Pre {{ session.preEffort?.pa || '-' }} / FC {{ session.preEffort?.fc ?? '-' }} / SpO2 {{ session.preEffort?.spo2 ?? '-' }} ·
+            Post {{ session.postEffort?.pa || '-' }} / FC {{ session.postEffort?.fc ?? '-' }} / SpO2 {{ session.postEffort?.spo2 ?? '-' }}
+          </p>
+        }
+        @if (session.evaluations) {
+          <p class="sm:col-span-2">
+            <strong class="text-slate-700">Evaluaciones:</strong>
+            RPE {{ session.evaluations.rpe ?? '-' }} · RIR {{ session.evaluations.rir ?? '-' }} · RM {{ session.evaluations.rm ?? '-' }}
+          </p>
+        }
+      </div>
+
+      <ul class="space-y-2">
+        @for (activity of session.activities; track activity.id) {
+          <li class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+            <p class="font-medium text-slate-900">{{ activity.name }}</p>
+            <p>
+              {{ activity.type === 'physical' ? 'Fisica' : 'Cognitiva' }}
+              @if (activity.durationMinutes) {
+                · {{ activity.durationMinutes }} min
+              }
+              @if (activity.sets || activity.reps) {
+                · {{ activity.sets ?? '-' }} series x {{ activity.reps ?? '-' }} reps
+              }
+            </p>
+            @if (activity.description) {
+              <p class="mt-1 text-slate-600">{{ activity.description }}</p>
+            }
+          </li>
+        }
+      </ul>
+
+      @if (session.generalNotes) {
+        <p class="rounded-lg bg-teal-50 px-3 py-2 text-xs text-teal-900">
+          <strong>Notas:</strong> {{ session.generalNotes }}
+        </p>
+      }
+    </article>
+  } @empty {
+    <article class="fc-card p-5 text-center text-sm text-slate-600">No hay sesiones para mostrar con los filtros actuales.</article>
+  }
+</section>
