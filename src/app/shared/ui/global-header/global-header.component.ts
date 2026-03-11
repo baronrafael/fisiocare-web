@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'fc-global-header',
@@ -6,11 +6,7 @@ import { Component, input, output } from '@angular/core';
   styleUrl: './global-header.component.scss'
 })
 export class GlobalHeaderComponent {
-  readonly userName = input.required<string>();
+  readonly fullName = input.required<string>();
+  readonly plan = input.required<'free' | 'premium'>();
   readonly patientLimitReached = input(false);
-  readonly createPatient = output<void>();
-
-  protected onCreatePatient(): void {
-    this.createPatient.emit();
-  }
 }

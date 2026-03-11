@@ -1,11 +1,11 @@
 <div class="min-h-dvh">
   <fc-global-header
-    [userName]="userName()"
+    [fullName]="userFullName()"
+    [plan]="activePlan()"
     [patientLimitReached]="patientLimitReached()"
-    (createPatient)="goToNewPatient()"
   />
 
-  <div class="md:grid md:grid-cols-[240px_1fr]">
+  <div class="md:grid md:min-h-[calc(100dvh-4.5rem)] md:grid-cols-[240px_1fr]">
     <fc-app-navigation [navItems]="navItems" (logout)="logout()" />
 
     <section class="pb-24 md:pb-0">

@@ -29,20 +29,11 @@ export class AppShellComponent {
     { label: 'Cuenta', path: '/app/account' }
   ];
 
-  protected readonly userName = computed(() => this.authService.user()?.fullName ?? 'Fisio');
+  protected readonly userFullName = computed(() => this.authService.user()?.fullName ?? 'Profesional');
+  protected readonly activePlan = this.planService.plan;
   protected readonly patientLimitReached = computed(() =>
     this.planService.isPatientLimitReached(this.patientsRepository.patients().length)
   );
-
-  protected goToNewPatient(): void {
-    if (this.patientLimitReached()) {
-      this.toastService.warning(TOAST_COPY.plan.freeLimit);
-      this.router.navigateByUrl('/app/account');
-      return;
-    }
-
-    this.router.navigateByUrl('/app/patients/new');
-  }
 
   protected logout(): void {
     this.authService.logout();
