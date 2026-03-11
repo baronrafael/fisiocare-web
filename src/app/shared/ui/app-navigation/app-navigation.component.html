@@ -1,0 +1,32 @@
+<aside class="fc-card m-4 hidden p-4 md:block">
+  <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">FisioCare</p>
+  <h1 class="mt-2 text-lg font-semibold">Panel clinico</h1>
+
+  <nav class="mt-6 space-y-2">
+    @for (item of navItems(); track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="bg-teal-50 text-teal-800"
+        class="block rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+
+  <button class="fc-btn fc-btn-ghost mt-8 w-full" type="button" (click)="onLogout()">Cerrar sesion</button>
+</aside>
+
+<nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white px-2 py-2 md:hidden">
+  <div class="grid grid-cols-4 gap-1">
+    @for (item of navItems(); track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="bg-teal-50 text-teal-800"
+        class="rounded-lg px-2 py-2 text-center text-xs font-medium text-slate-600"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </div>
+</nav>
