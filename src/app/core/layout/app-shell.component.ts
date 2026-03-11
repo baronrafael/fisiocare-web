@@ -5,7 +5,7 @@ import { TOAST_COPY } from '../notifications/toast-copy';
 import { ToastService } from '../notifications/toast.service';
 import { PlanService } from '../subscription/plan.service';
 import { PatientsRepository } from '../../mocks/repositories/patients.repository';
-import { ToastStackComponent } from '../../shared/ui/toast-stack.component';
+import { ToastStackComponent } from '../../shared/ui/toast-stack/toast-stack.component';
 
 interface NavItem {
   label: string;

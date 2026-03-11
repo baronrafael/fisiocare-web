@@ -2,8 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ButtonComponent } from '../../../shared/ui/button.component';
-import { InputFieldComponent } from '../../../shared/ui/input-field.component';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { InputFieldComponent } from '../../../shared/ui/input-field/input-field.component';
 
 @Component({
   selector: 'fc-login-page',

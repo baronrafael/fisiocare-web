@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
-import { StateCardComponent } from '../../../shared/ui/state-card.component';
+import { StateCardComponent } from '../../../shared/ui/state-card/state-card.component';
 
 @Component({
   selector: 'fc-dashboard-page',

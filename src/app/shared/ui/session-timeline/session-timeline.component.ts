@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { SessionRecord } from '../../core/models/session.model';
+import { SessionRecord } from '../../../core/models/session.model';
 
 @Component({
   selector: 'fc-session-timeline',

@@ -5,7 +5,7 @@ import { TOAST_COPY } from '../../../core/notifications/toast-copy';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
-import { StateCardComponent } from '../../../shared/ui/state-card.component';
+import { StateCardComponent } from '../../../shared/ui/state-card/state-card.component';
 
 @Component({
   selector: 'fc-patients-page',

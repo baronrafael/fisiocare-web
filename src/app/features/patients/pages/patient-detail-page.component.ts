@@ -9,7 +9,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 import { PatientFilesRepository } from '../../../mocks/repositories/patient-files.repository';
 import { ContactLogsRepository } from '../../../mocks/repositories/contact-logs.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
-import { SessionTimelineComponent } from '../../../shared/ui/session-timeline.component';
+import { SessionTimelineComponent } from '../../../shared/ui/session-timeline/session-timeline.component';
 
 type PatientTab = 'summary' | 'clinical' | 'files' | 'context' | 'checklist' | 'administrative' | 'sessions' | 'contacts';
 type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';

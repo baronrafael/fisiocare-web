@@ -8,7 +8,7 @@ import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
 import { TemplatesRepository } from '../../../mocks/repositories/templates.repository';
-import { ButtonComponent } from '../../../shared/ui/button.component';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'fc-session-editor-page',
