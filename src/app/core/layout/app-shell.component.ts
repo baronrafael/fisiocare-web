@@ -6,6 +6,7 @@ import { ToastService } from '../notifications/toast.service';
 import { PlanService } from '../subscription/plan.service';
 import { PatientsRepository } from '../../mocks/repositories/patients.repository';
 import { ToastStackComponent } from '../../shared/ui/toast-stack/toast-stack.component';
+import { GlobalHeaderComponent } from '../../shared/ui/global-header/global-header.component';
 
 interface NavItem {
   label: string;
@@ -14,7 +15,7 @@ interface NavItem {
 
 @Component({
   selector: 'fc-app-shell',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, ToastStackComponent],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, ToastStackComponent, GlobalHeaderComponent],
   template: `
     <div class="min-h-dvh md:grid md:grid-cols-[240px_1fr]">
       <aside class="fc-card m-4 hidden p-4 md:block">
@@ -37,27 +38,11 @@ interface NavItem {
       </aside>
 
       <section class="pb-24 md:pb-0">
-        <header class="sticky top-0 z-20 border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur">
-          <div class="mx-auto flex max-w-6xl items-center justify-between gap-2">
-            <div>
-              <p class="text-xs text-slate-500">Hola, {{ userName() }}</p>
-              <h2 class="text-sm font-semibold">Tu practica al dia</h2>
-            </div>
-            <button
-              type="button"
-              class="fc-btn fc-btn-primary text-sm disabled:cursor-not-allowed disabled:opacity-60"
-              [disabled]="patientLimitReached()"
-              (click)="goToNewPatient()"
-            >
-              Nuevo paciente
-            </button>
-          </div>
-          @if (patientLimitReached()) {
-            <p class="mx-auto mt-2 max-w-6xl rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
-              Alcanzaste el limite del plan Free (10 pacientes). Actualiza a Premium para continuar.
-            </p>
-          }
-        </header>
+        <fc-global-header
+          [userName]="userName()"
+          [patientLimitReached]="patientLimitReached()"
+          (createPatient)="goToNewPatient()"
+        />
 
         <main class="mx-auto max-w-6xl px-4 py-4 md:py-6">
           <router-outlet />
