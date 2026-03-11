@@ -12,25 +12,8 @@ import { AppNavigationComponent, AppNavItem } from '../../shared/ui/app-navigati
 @Component({
   selector: 'fc-app-shell',
   imports: [RouterOutlet, ToastStackComponent, GlobalHeaderComponent, AppNavigationComponent],
-  template: `
-    <div class="min-h-dvh md:grid md:grid-cols-[240px_1fr]">
-      <fc-app-navigation [navItems]="navItems" (logout)="logout()" />
-
-      <section class="pb-24 md:pb-0">
-        <fc-global-header
-          [userName]="userName()"
-          [patientLimitReached]="patientLimitReached()"
-          (createPatient)="goToNewPatient()"
-        />
-
-        <main class="mx-auto max-w-6xl px-4 py-4 md:py-6">
-          <router-outlet />
-        </main>
-      </section>
-
-      <fc-toast-stack />
-    </div>
-  `
+  templateUrl: './app-shell.component.html',
+  styleUrl: './app-shell.component.scss'
 })
 export class AppShellComponent {
   private readonly authService = inject(AuthService);
