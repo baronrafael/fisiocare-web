@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root {
+  --fc-bg: #f4f6f8;
+  --fc-surface: #ffffff;
+  --fc-surface-soft: #edf2f7;
+  --fc-border: #d3dde7;
+  --fc-text: #102a43;
+  --fc-text-muted: #4f6478;
+  --fc-accent: #0f766e;
+  --fc-accent-soft: #ccfbf1;
+  --fc-danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Inter", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #e5edf4 0%, var(--fc-bg) 45%);
+  color: var(--fc-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.fc-card {
+  border: 1px solid var(--fc-border);
+  border-radius: 1rem;
+  background: var(--fc-surface);
+  box-shadow: 0 4px 18px rgba(16, 42, 67, 0.06);
+}
+
+.fc-input {
+  width: 100%;
+  border: 1px solid var(--fc-border);
+  border-radius: 0.75rem;
+  background: var(--fc-surface);
+  padding: 0.7rem 0.85rem;
+  color: var(--fc-text);
+}
+
+.fc-input:focus {
+  outline: 2px solid color-mix(in srgb, var(--fc-accent) 24%, white);
+  border-color: var(--fc-accent);
+}
+
+.fc-btn {
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fc-btn-primary {
+  background: var(--fc-accent);
+  color: #ffffff;
+}
+
+.fc-btn-primary:hover {
+  background: #0b5c56;
+}
+
+.fc-btn-ghost {
+  background: var(--fc-surface-soft);
+  color: var(--fc-text);
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .fc-print-hide {
+    display: none !important;
+  }
+
+  fc-app-shell > div > aside,
+  fc-app-shell > div > section > header,
+  fc-app-shell > div > nav {
+    display: none !important;
+  }
+
+  fc-app-shell > div > section {
+    padding-bottom: 0 !important;
+  }
+
+  fc-app-shell > div > section > main {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .fc-a4-document {
+    max-width: none !important;
+    width: 100% !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
