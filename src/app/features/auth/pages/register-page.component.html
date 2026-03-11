@@ -1,0 +1,42 @@
+<main class="auth-shell">
+  <section class="fc-card auth-card">
+    <h1 class="auth-title">Crear cuenta</h1>
+    <p class="auth-subtitle">Comienza a organizar tu seguimiento clinico en minutos.</p>
+
+    <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
+      <fc-input-field
+        label="Nombre completo"
+        type="text"
+        name="fullName"
+        [value]="fullName()"
+        [required]="true"
+        (valueChange)="fullName.set($event)"
+      />
+
+      <fc-input-field
+        label="Correo"
+        type="email"
+        name="email"
+        [value]="email()"
+        [required]="true"
+        (valueChange)="email.set($event)"
+      />
+
+      <fc-input-field
+        label="Contrasena"
+        type="password"
+        name="password"
+        [value]="password()"
+        [required]="true"
+        (valueChange)="password.set($event)"
+      />
+
+      <fc-button type="submit" [block]="true">Crear y entrar</fc-button>
+    </form>
+
+    <p class="mt-5 text-sm text-slate-600">
+      Ya tienes cuenta?
+      <a routerLink="/auth/login" class="text-teal-700 hover:underline">Inicia sesion</a>
+    </p>
+  </section>
+</main>

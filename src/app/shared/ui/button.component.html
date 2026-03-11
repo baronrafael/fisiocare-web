@@ -1,0 +1,12 @@
+<button
+  class="fc-btn"
+  [attr.type]="type()"
+  [disabled]="disabled()"
+  [class.fc-btn-primary]="variant() === 'primary'"
+  [class.fc-btn-ghost]="variant() === 'ghost'"
+  [class.fc-btn-danger]="variant() === 'danger'"
+  [class.w-full]="block()"
+  [class.text-sm]="size() === 'sm'"
+>
+  <ng-content />
+</button>

@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --fc-bg: #f4f6f8;
-  --fc-surface: #ffffff;
-  --fc-surface-soft: #edf2f7;
-  --fc-border: #d3dde7;
-  --fc-text: #102a43;
-  --fc-text-muted: #4f6478;
-  --fc-accent: #0f766e;
-  --fc-accent-soft: #ccfbf1;
-  --fc-danger: #b42318;
+  --fc-bg: #f6f4ef;
+  --fc-surface: #fffcf8;
+  --fc-surface-soft: #f3eee6;
+  --fc-border: #d7d8d2;
+  --fc-text: #23313a;
+  --fc-text-muted: #5c6b73;
+  --fc-accent: #2c7a7b;
+  --fc-accent-soft: #d8ece8;
+  --fc-danger: #b65b52;
 }
 
 * {
@@ -19,7 +19,7 @@
 body {
   margin: 0;
   font-family: "Plus Jakarta Sans", "Inter", "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #e5edf4 0%, var(--fc-bg) 45%);
+  background: radial-gradient(circle at top, #ece9df 0%, var(--fc-bg) 45%);
   color: var(--fc-text);
 }
 
@@ -42,15 +42,15 @@ select {
 
 .fc-card {
   border: 1px solid var(--fc-border);
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   background: var(--fc-surface);
-  box-shadow: 0 4px 18px rgba(16, 42, 67, 0.06);
+  box-shadow: 0 8px 30px rgba(35, 49, 58, 0.06);
 }
 
 .fc-input {
   width: 100%;
   border: 1px solid var(--fc-border);
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
   background: var(--fc-surface);
   padding: 0.7rem 0.85rem;
   color: var(--fc-text);
@@ -63,7 +63,7 @@ select {
 
 .fc-btn {
   border: 0;
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
   padding: 0.65rem 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -75,12 +75,17 @@ select {
 }
 
 .fc-btn-primary:hover {
-  background: #0b5c56;
+  background: #245f60;
 }
 
 .fc-btn-ghost {
   background: var(--fc-surface-soft);
   color: var(--fc-text);
+}
+
+.fc-btn-danger {
+  background: var(--fc-danger);
+  color: #ffffff;
 }
 
 @media print {

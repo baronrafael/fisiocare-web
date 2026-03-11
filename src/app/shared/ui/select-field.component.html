@@ -1,0 +1,11 @@
+<label class="block text-sm font-medium text-slate-700">
+  {{ label() }}
+  <select class="fc-input mt-1" [value]="value()" (change)="onChange($event)">
+    @for (option of options(); track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
+  </select>
+  @if (error()) {
+    <p class="mt-1 text-xs text-red-700">{{ error() }}</p>
+  }
+</label>

@@ -1,0 +1,13 @@
+<label class="block text-sm font-medium text-slate-700">
+  {{ label() }}
+  <textarea
+    class="fc-input mt-1 min-h-20"
+    [attr.name]="name()"
+    [attr.placeholder]="placeholder()"
+    [value]="value()"
+    (input)="onInput($event)"
+  ></textarea>
+  @if (error()) {
+    <p class="mt-1 text-xs text-red-700">{{ error() }}</p>
+  }
+</label>

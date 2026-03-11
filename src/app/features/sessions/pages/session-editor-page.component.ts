@@ -8,10 +8,11 @@ import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
 import { TemplatesRepository } from '../../../mocks/repositories/templates.repository';
+import { ButtonComponent } from '../../../shared/ui/button.component';
 
 @Component({
   selector: 'fc-session-editor-page',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent],
   template: `
     <section class="space-y-4">
       <header>
@@ -65,7 +66,7 @@ import { TemplatesRepository } from '../../../mocks/repositories/templates.repos
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-slate-700">Actividades</p>
-            <button type="button" class="text-sm font-medium text-teal-700 hover:underline" (click)="addActivity()">Agregar</button>
+            <fc-button variant="ghost" size="sm" (click)="addActivity()">Agregar</fc-button>
           </div>
 
           <div formArrayName="activities" class="space-y-2">
@@ -205,9 +206,7 @@ import { TemplatesRepository } from '../../../mocks/repositories/templates.repos
         }
 
         <div class="sticky bottom-18 rounded-xl bg-white/90 p-2 backdrop-blur md:static md:bg-transparent md:p-0">
-          <button type="submit" class="fc-btn fc-btn-primary w-full" [disabled]="form.invalid || activityControls.length === 0">
-            Guardar sesion (mock)
-          </button>
+          <fc-button type="submit" [block]="true" [disabled]="form.invalid || activityControls.length === 0">Guardar sesion (mock)</fc-button>
         </div>
 
         @if (saved()) {
