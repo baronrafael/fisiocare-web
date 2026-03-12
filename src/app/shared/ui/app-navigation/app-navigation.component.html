@@ -1,17 +1,99 @@
-<aside class="hidden border-r border-slate-200 bg-white p-4 md:sticky md:top-[4.5rem] md:block md:h-[calc(100dvh-4.5rem)] md:overflow-y-auto md:flex md:flex-col">
-  <nav class="space-y-2 md:flex-1">
+<aside class="hidden border-r border-slate-200 bg-white md:sticky md:top-[4.5rem] md:block md:h-[calc(100dvh-4.5rem)] md:overflow-y-auto md:flex md:flex-col transition-all duration-200"
+  [class.p-2]="collapsed()"
+  [class.p-4]="!collapsed()"
+>
+  <button
+    type="button"
+    class="flex items-center rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+    [class.justify-center]="collapsed()"
+    [attr.aria-label]="collapsed() ? 'Expandir menu lateral' : 'Colapsar menu lateral'"
+    [attr.title]="collapsed() ? 'Expandir menu' : 'Colapsar menu'"
+    (click)="onToggleCollapsed()"
+  >
+    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      @if (collapsed()) {
+        <path d="M9 18l6-6-6-6" />
+      } @else {
+        <path d="M15 18l-6-6 6-6" />
+      }
+    </svg>
+    @if (!collapsed()) {
+      <span class="ml-2 text-xs font-medium uppercase tracking-[0.12em]">Menu</span>
+    }
+  </button>
+
+  <nav class="mt-4 space-y-2 md:flex-1">
     @for (item of navItems(); track item.path) {
       <a
         [routerLink]="item.path"
         routerLinkActive="bg-teal-50 text-teal-800"
-        class="block rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+        class="flex items-center rounded-xl py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+        [class.justify-center]="collapsed()"
+        [class.gap-2]="!collapsed()"
+        [class.px-2]="collapsed()"
+        [class.px-3]="!collapsed()"
+        [attr.aria-label]="item.label"
+        [attr.title]="collapsed() ? item.label : null"
       >
-        {{ item.label }}
+        <span class="inline-flex h-5 w-5 items-center justify-center text-slate-600" aria-hidden="true">
+          @switch (item.icon) {
+            @case ('patients') {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1" />
+                <circle cx="9" cy="7" r="3" />
+                <path d="M22 19v-1a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+              </svg>
+            }
+            @case ('dashboard') {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="11" rx="1.5" />
+                <rect x="14" y="17" width="7" height="4" rx="1.5" />
+                <rect x="3" y="13" width="7" height="8" rx="1.5" />
+              </svg>
+            }
+            @case ('templates') {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16v16H4z" />
+                <path d="M8 8h8" />
+                <path d="M8 12h8" />
+                <path d="M8 16h5" />
+              </svg>
+            }
+            @default {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="7" r="4" />
+                <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
+              </svg>
+            }
+          }
+        </span>
+        @if (!collapsed()) {
+          <span class="truncate">{{ item.label }}</span>
+        }
       </a>
     }
   </nav>
 
-  <button class="fc-btn fc-btn-ghost mt-8 w-full" type="button" (click)="onLogout()">Cerrar sesion</button>
+  <button
+    class="fc-btn fc-btn-ghost mt-8 inline-flex items-center justify-center gap-2 whitespace-nowrap"
+    [class.w-full]="!collapsed()"
+    [class.px-2]="collapsed()"
+    type="button"
+    [attr.aria-label]="'Cerrar sesion'"
+    [attr.title]="collapsed() ? 'Cerrar sesion' : null"
+    (click)="onLogout()"
+  >
+    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5" />
+      <path d="M21 12H9" />
+    </svg>
+    @if (!collapsed()) {
+      <span>Cerrar sesion</span>
+    }
+  </button>
 </aside>
 
 <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white px-2 py-2 md:hidden">

@@ -10,8 +10,8 @@ describe('AppNavigationComponent', () => {
     });
     const fixture = TestBed.createComponent(AppNavigationComponent);
     fixture.componentRef.setInput('navItems', [
-      { label: 'Pacientes', path: '/app/patients' },
-      { label: 'Dashboard', path: '/app/dashboard' }
+      { label: 'Pacientes', path: '/app/patients', icon: 'patients' },
+      { label: 'Dashboard', path: '/app/dashboard', icon: 'dashboard' }
     ]);
     fixture.detectChanges();
     expect(fixture.componentInstance).toBeTruthy();

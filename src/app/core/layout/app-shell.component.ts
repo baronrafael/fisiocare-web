@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { TOAST_COPY } from '../notifications/toast-copy';
@@ -8,6 +8,8 @@ import { PatientsRepository } from '../../mocks/repositories/patients.repository
 import { ToastStackComponent } from '../../shared/ui/toast-stack/toast-stack.component';
 import { GlobalHeaderComponent } from '../../shared/ui/global-header/global-header.component';
 import { AppNavigationComponent, AppNavItem } from '../../shared/ui/app-navigation/app-navigation.component';
+
+const NAV_COLLAPSED_STORAGE_KEY = 'fc_nav_collapsed';
 
 @Component({
   selector: 'fc-app-shell',
@@ -23,12 +25,13 @@ export class AppShellComponent {
   private readonly patientsRepository = inject(PatientsRepository);
 
   protected readonly navItems: AppNavItem[] = [
-    { label: 'Pacientes', path: '/app/patients' },
-    { label: 'Dashboard', path: '/app/dashboard' },
-    { label: 'Plantillas', path: '/app/templates' },
-    { label: 'Cuenta', path: '/app/account' }
+    { label: 'Pacientes', path: '/app/patients', icon: 'patients' },
+    { label: 'Dashboard', path: '/app/dashboard', icon: 'dashboard' },
+    { label: 'Plantillas', path: '/app/templates', icon: 'templates' },
+    { label: 'Cuenta', path: '/app/account', icon: 'account' }
   ];
 
+  protected readonly isNavCollapsed = signal(this.restoreNavCollapsed());
   protected readonly userFullName = computed(() => this.authService.user()?.fullName ?? 'Profesional');
   protected readonly activePlan = this.planService.plan;
   protected readonly patientLimitReached = computed(() =>
@@ -39,5 +42,25 @@ export class AppShellComponent {
     this.authService.logout();
     this.toastService.info(TOAST_COPY.auth.logout);
     this.router.navigateByUrl('/auth/login');
+  }
+
+  protected toggleNavCollapsed(): void {
+    const next = !this.isNavCollapsed();
+    this.isNavCollapsed.set(next);
+    this.persistNavCollapsed(next);
+  }
+
+  private restoreNavCollapsed(): boolean {
+    try {
+      return localStorage.getItem(NAV_COLLAPSED_STORAGE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  private persistNavCollapsed(collapsed: boolean): void {
+    try {
+      localStorage.setItem(NAV_COLLAPSED_STORAGE_KEY, collapsed ? '1' : '0');
+    } catch {}
   }
 }
