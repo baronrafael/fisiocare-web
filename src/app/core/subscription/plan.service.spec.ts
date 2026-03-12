@@ -28,13 +28,13 @@ describe('PlanService', () => {
     expect(planService.isPatientLimitReached(10)).toBe(true);
   });
 
-  it('should unlock premium features after plan upgrade', () => {
+  it('should unlock pro features after plan upgrade', () => {
     const authService = TestBed.inject(AuthService);
     const planService = TestBed.inject(PlanService);
 
-    authService.setPlan('premium');
+    authService.setPlan('pro');
 
-    expect(planService.plan()).toBe('premium');
+    expect(planService.plan()).toBe('pro');
     expect(planService.canUseTemplates()).toBe(true);
     expect(planService.canUsePdfExport()).toBe(true);
     expect(planService.canUseAdvancedPatientProfile()).toBe(true);

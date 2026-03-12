@@ -12,22 +12,40 @@
   padding: 1.5rem;
 }
 
-.auth-brand {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fc-accent);
+.auth-header {
+  text-align: center;
+}
+
+.auth-logo {
+  height: 2.25rem;
+  width: auto;
+  margin: 0 auto;
 }
 
 .auth-title {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 .auth-subtitle {
   margin-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 22ch;
   font-size: 0.875rem;
+  line-height: 1.4;
   color: var(--fc-text-muted);
+}
+
+.auth-secondary-actions {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 27.5rem) {
+  .auth-secondary-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

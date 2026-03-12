@@ -19,23 +19,27 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
         <p class="mt-1 font-semibold">{{ userName() }}</p>
 
         <p class="mt-4 text-sm text-slate-600">Plan actual</p>
-        <p class="mt-1 inline-flex rounded-full bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-700">
-          {{ userPlan() === 'free' ? 'Free' : 'Premium' }}
+        <p
+          class="fc-badge-plan mt-1"
+          [class.fc-badge-plan-free]="userPlan() === 'free'"
+          [class.fc-badge-plan-pro]="userPlan() === 'pro'"
+        >
+          {{ userPlan() === 'free' ? 'Free' : 'Pro' }}
         </p>
 
         <p class="mt-4 text-sm text-slate-600">Uso de pacientes</p>
         <p class="mt-1 font-semibold">{{ patientUsage() }}</p>
 
         @if (userPlan() === 'free') {
-          <p class="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+          <p class="fc-alert-warning mt-4 text-sm">
             Free: hasta 10 pacientes. Sin plantillas ni exportacion PDF.
           </p>
-          <button class="fc-btn fc-btn-primary mt-3 w-full" type="button" (click)="upgradeToPremium()">
-            Activar Premium (mock)
+          <button class="fc-btn fc-btn-primary mt-3 w-full" type="button" (click)="upgradeToPro()">
+            Activar Pro (mock)
           </button>
         } @else {
-          <p class="mt-4 rounded-lg bg-teal-50 p-3 text-sm text-teal-900">
-            Premium activo: pacientes ilimitados, plantillas y PDF habilitados.
+          <p class="fc-alert-success mt-4 text-sm">
+            Pro activo: pacientes ilimitados, plantillas y PDF habilitados.
           </p>
           <button class="fc-btn fc-btn-ghost mt-3 w-full" type="button" (click)="downgradeToFree()">
             Volver a Free (mock)
@@ -57,8 +61,8 @@ export class AccountPageComponent {
     this.planService.patientUsageLabel(this.patientsRepository.patients().length)
   );
 
-  protected upgradeToPremium(): void {
-    this.authService.setPlan('premium');
+  protected upgradeToPro(): void {
+    this.authService.setPlan('pro');
     this.toastService.success(TOAST_COPY.plan.upgraded);
   }
 

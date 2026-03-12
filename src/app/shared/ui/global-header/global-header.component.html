@@ -5,13 +5,11 @@
     <div class="flex items-center gap-2">
       <p class="max-w-40 truncate text-sm text-slate-700 sm:max-w-none">{{ fullName() }}</p>
       <span
-        class="rounded-full px-3 py-1 text-xs font-semibold"
-        [class.bg-slate-100]="plan() === 'free'"
-        [class.text-slate-700]="plan() === 'free'"
-        [class.bg-teal-50]="plan() === 'premium'"
-        [class.text-teal-800]="plan() === 'premium'"
+        class="fc-badge-plan"
+        [class.fc-badge-plan-free]="plan() === 'free'"
+        [class.fc-badge-plan-pro]="plan() === 'pro'"
       >
-        {{ plan() === 'free' ? 'Free' : 'Premium' }}
+        {{ plan() === 'free' ? 'Free' : 'Pro' }}
       </span>
       <button
         type="button"
@@ -30,8 +28,8 @@
   </div>
 
   @if (patientLimitReached()) {
-    <p class="mx-auto mt-2 max-w-6xl rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
-      Alcanzaste el limite del plan Free (10 pacientes). Actualiza a Premium para continuar.
+    <p class="fc-alert-warning-compact mx-auto mt-2 max-w-6xl">
+      Alcanzaste el limite del plan Free (10 pacientes). Actualiza a Pro para continuar.
     </p>
   }
 </header>

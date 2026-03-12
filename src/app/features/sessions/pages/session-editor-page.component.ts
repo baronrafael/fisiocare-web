@@ -20,7 +20,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
         <p class="mt-1 text-sm text-slate-600">Registro rapido para no frenar el flujo clinico.</p>
       </header>
 
-      <a routerLink="/app/patients" class="inline-block text-sm text-teal-700 hover:underline">Volver a pacientes</a>
+      <a routerLink="/app/patients" class="fc-link fc-link-sm inline-block">Volver a pacientes</a>
 
       <form class="fc-card space-y-4 p-4" [formGroup]="form" (ngSubmit)="onSubmit()">
         <label class="block text-sm font-medium text-slate-700">
@@ -55,7 +55,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
               </button>
             </div>
           } @else {
-            <p class="rounded-lg bg-amber-50 p-2 text-xs text-amber-900">Las plantillas estan disponibles en Premium.</p>
+            <p class="fc-alert-warning-compact">Las plantillas estan disponibles en Pro.</p>
           }
 
           <button type="button" class="fc-btn fc-btn-ghost w-full text-sm" [disabled]="!latestSession()" (click)="duplicateLastSession()">
@@ -200,8 +200,8 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
             </div>
           }
         } @else {
-          <article class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-            Escalas clinicas, signos vitales y evaluaciones periodicas estan disponibles en Premium.
+          <article class="fc-alert-warning text-sm">
+            Escalas clinicas, signos vitales y evaluaciones periodicas estan disponibles en Pro.
           </article>
         }
 
@@ -210,7 +210,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
         </div>
 
         @if (saved()) {
-          <p class="rounded-lg bg-teal-50 p-3 text-sm text-teal-900">Sesion mock guardada correctamente.</p>
+          <p class="fc-alert-success text-sm">Sesion mock guardada correctamente.</p>
         }
       </form>
     </section>
@@ -305,7 +305,7 @@ export class SessionEditorPageComponent {
 
   protected applyTemplate(): void {
     if (!this.planService.canUseTemplates()) {
-      this.toastService.warning(TOAST_COPY.plan.premiumOnly);
+      this.toastService.warning(TOAST_COPY.plan.proOnly);
       return;
     }
 

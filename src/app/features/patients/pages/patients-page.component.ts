@@ -5,11 +5,12 @@ import { TOAST_COPY } from '../../../core/notifications/toast-copy';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
+import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { StateCardComponent } from '../../../shared/ui/state-card/state-card.component';
 
 @Component({
   selector: 'fc-patients-page',
-  imports: [RouterLink, StateCardComponent],
+  imports: [RouterLink, LinkButtonComponent, StateCardComponent],
   template: `
     <section class="space-y-4">
       @if (uiState() === 'loading') {
@@ -34,14 +35,14 @@ import { StateCardComponent } from '../../../shared/ui/state-card/state-card.com
 
       @if (isFreePlan()) {
         @if (patientLimitReached()) {
-          <article class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <article class="fc-alert-warning text-sm">
             Limite del plan Free alcanzado. Actualiza tu plan para cargar mas pacientes.
-            <a routerLink="/app/account" class="ml-2 font-semibold underline">Ver planes</a>
+            <a routerLink="/app/account" class="fc-link ml-2 font-semibold">Ver planes</a>
           </article>
         } @else {
           <div class="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
             <span>Uso del plan Free: {{ patientUsage() }}</span>
-            <a routerLink="/app/account" class="font-semibold text-slate-700 hover:underline">Plan</a>
+            <a routerLink="/app/account" class="fc-link font-semibold">Plan</a>
           </div>
         }
       }
@@ -85,8 +86,8 @@ import { StateCardComponent } from '../../../shared/ui/state-card/state-card.com
             <p class="mt-1 text-xs text-slate-500">Ultima sesion: {{ patient.lastSessionAt }}</p>
 
             <div class="mt-3 flex gap-2">
-              <a [routerLink]="['/app/patients', patient.id]" class="fc-btn fc-btn-ghost text-sm">Ver ficha</a>
-              <a [routerLink]="['/app/patients', patient.id, 'sessions', 'new']" class="fc-btn fc-btn-primary text-sm">Nueva sesion</a>
+              <fc-link-button variant="ghost" size="sm" [routerLink]="['/app/patients', patient.id]">Ver ficha</fc-link-button>
+              <fc-link-button variant="primary" size="sm" [routerLink]="['/app/patients', patient.id, 'sessions', 'new']">Nueva sesion</fc-link-button>
             </div>
           </article>
         } @empty {

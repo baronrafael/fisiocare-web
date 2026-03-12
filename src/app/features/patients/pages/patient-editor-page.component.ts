@@ -17,7 +17,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
         <p class="mt-1 text-sm text-slate-600">Formulario por bloques para mantener carga rapida en movil.</p>
       </header>
 
-      <a routerLink="/app/patients" class="inline-block text-sm text-teal-700 hover:underline">Volver a pacientes</a>
+      <a routerLink="/app/patients" class="fc-link fc-link-sm inline-block">Volver a pacientes</a>
 
       <form class="fc-card space-y-4 p-4" [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="space-y-2">
@@ -188,8 +188,8 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
             </div>
           }
         } @else {
-          <article class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-            La ficha avanzada (clinico, contexto, administrativo y checklist) esta disponible en Premium.
+          <article class="fc-alert-warning text-sm">
+            La ficha avanzada (clinico, contexto, administrativo y checklist) esta disponible en Pro.
           </article>
         }
 
@@ -198,13 +198,13 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
         </div>
 
         @if (limitError()) {
-          <p class="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
-            Alcanzaste el limite del plan Free. Actualiza a Premium para crear mas pacientes.
+          <p class="fc-alert-warning text-sm">
+            Alcanzaste el limite del plan Free. Actualiza a Pro para crear mas pacientes.
           </p>
         }
 
         @if (saved()) {
-          <p class="rounded-lg bg-teal-50 p-3 text-sm text-teal-900">Paciente guardado correctamente.</p>
+          <p class="fc-alert-success text-sm">Paciente guardado correctamente.</p>
         }
       </form>
     </section>

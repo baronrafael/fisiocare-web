@@ -17,9 +17,9 @@ import { SessionsRepository } from '../../../mocks/repositories/sessions.reposit
       </header>
 
       @if (!planService.canUsePdfExport()) {
-        <article class="fc-card border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
-          La exportacion en PDF es una funcionalidad Premium.
-          <a routerLink="/app/account" class="ml-2 font-semibold underline">Actualizar plan</a>
+        <article class="fc-alert-warning text-sm">
+          La exportacion en PDF es una funcionalidad Pro.
+          <a routerLink="/app/account" class="fc-link ml-2 font-semibold">Actualizar plan</a>
         </article>
       } @else if (patient(); as item) {
         <div class="fc-print-hide mx-auto flex w-full max-w-[920px] justify-end gap-2">

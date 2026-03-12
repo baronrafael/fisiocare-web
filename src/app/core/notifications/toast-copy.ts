@@ -6,12 +6,12 @@ export const TOAST_COPY = {
   patient: {
     created: 'Paciente creado correctamente.',
     updated: 'Paciente actualizado.',
-    limitReached: 'Limite Free alcanzado. Activa Premium para agregar mas pacientes.'
+    limitReached: 'Limite Free alcanzado. Activa Pro para agregar mas pacientes.'
   },
   plan: {
-    freeLimit: 'Limite Free alcanzado. Actualiza a Premium para crear mas pacientes.',
-    premiumOnly: 'Esta funcionalidad esta disponible en Premium.',
-    upgraded: 'Plan Premium activado (mock).',
+    freeLimit: 'Limite Free alcanzado. Actualiza a Pro para crear mas pacientes.',
+    proOnly: 'Esta funcionalidad esta disponible en Pro.',
+    upgraded: 'Plan Pro activado (mock).',
     downgraded: 'Volviste al plan Free (mock).'
   },
   auth: {

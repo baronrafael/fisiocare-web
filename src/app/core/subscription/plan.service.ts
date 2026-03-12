@@ -6,12 +6,12 @@ export class PlanService {
   private readonly authService = inject(AuthService);
 
   readonly plan = computed(() => this.authService.user()?.plan ?? 'free');
-  readonly isPremium = computed(() => this.plan() === 'premium');
-  readonly patientLimit = computed(() => (this.isPremium() ? Number.POSITIVE_INFINITY : 10));
-  readonly canUseTemplates = computed(() => this.isPremium());
-  readonly canUsePdfExport = computed(() => this.isPremium());
-  readonly canUseAdvancedSessionFields = computed(() => this.isPremium());
-  readonly canUseAdvancedPatientProfile = computed(() => this.isPremium());
+  readonly isPro = computed(() => this.plan() === 'pro');
+  readonly patientLimit = computed(() => (this.isPro() ? Number.POSITIVE_INFINITY : 10));
+  readonly canUseTemplates = computed(() => this.isPro());
+  readonly canUsePdfExport = computed(() => this.isPro());
+  readonly canUseAdvancedSessionFields = computed(() => this.isPro());
+  readonly canUseAdvancedPatientProfile = computed(() => this.isPro());
 
   isPatientLimitReached(currentPatientCount: number): boolean {
     const limit = this.patientLimit();

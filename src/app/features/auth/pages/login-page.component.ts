@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../shared/ui/input-field/input-field.component';
+import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 
 @Component({
   selector: 'fc-login-page',
-  imports: [FormsModule, RouterLink, ButtonComponent, InputFieldComponent],
+  imports: [FormsModule, ButtonComponent, InputFieldComponent, LinkButtonComponent],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss'
 })

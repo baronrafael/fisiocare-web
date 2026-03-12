@@ -7,7 +7,7 @@ import { Component, input, output } from '@angular/core';
 })
 export class GlobalHeaderComponent {
   readonly fullName = input.required<string>();
-  readonly plan = input.required<'free' | 'premium'>();
+  readonly plan = input.required<'free' | 'pro'>();
   readonly patientLimitReached = input(false);
   readonly logoutRequested = output<void>();
 

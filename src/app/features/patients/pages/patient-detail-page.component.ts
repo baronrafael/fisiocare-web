@@ -9,6 +9,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 import { PatientFilesRepository } from '../../../mocks/repositories/patient-files.repository';
 import { ContactLogsRepository } from '../../../mocks/repositories/contact-logs.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
+import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { SessionTimelineComponent } from '../../../shared/ui/session-timeline/session-timeline.component';
 
 type PatientTab = 'summary' | 'clinical' | 'files' | 'context' | 'checklist' | 'administrative' | 'sessions' | 'contacts';
@@ -16,7 +17,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
 
 @Component({
   selector: 'fc-patient-detail-page',
-  imports: [RouterLink, SessionTimelineComponent],
+  imports: [RouterLink, LinkButtonComponent, SessionTimelineComponent],
   template: `
     @if (patient(); as item) {
       <section class="space-y-4">
@@ -25,8 +26,8 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
           <h1 class="mt-1 text-xl font-semibold">{{ item.fullName }}</h1>
           <p class="mt-2 text-sm text-slate-600">{{ item.diagnosis }}</p>
           <div class="mt-3 flex gap-2">
-            <a [routerLink]="['/app/patients', item.id, 'edit']" class="fc-btn fc-btn-ghost text-sm">Editar ficha</a>
-            <a [routerLink]="['/app/patients', item.id, 'sessions', 'new']" class="fc-btn fc-btn-primary text-sm">Registrar sesion</a>
+            <fc-link-button variant="ghost" size="sm" [routerLink]="['/app/patients', item.id, 'edit']">Editar ficha</fc-link-button>
+            <fc-link-button variant="primary" size="sm" [routerLink]="['/app/patients', item.id, 'sessions', 'new']">Registrar sesion</fc-link-button>
           </div>
         </header>
 
@@ -43,7 +44,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
               >
                 {{ tab.label }}
                 @if (isLockedTab(tab.value)) {
-                  <span> · Premium</span>
+                  <span> · Pro</span>
                 }
               </button>
             }
@@ -62,7 +63,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
                 <p><strong>Telefono principal:</strong> {{ item.primaryPhone || 'No registrado' }}</p>
                 <p><strong>Diagnostico:</strong> {{ item.diagnosis }}</p>
               </div>
-              <p class="mt-4 rounded-lg bg-teal-50 p-3 text-sm text-teal-900">
+              <p class="fc-alert-success mt-4 text-sm">
                 <strong>Nota rapida:</strong> {{ item.persistentNotes || 'Sin notas permanentes.' }}
               </p>
             </article>
@@ -126,7 +127,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
               <h2 class="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Administrativo</h2>
               <p><strong>Modalidad de pago:</strong> {{ item.paymentMode || 'Sin registro' }}</p>
               <p><strong>Observaciones de pago:</strong> {{ item.paymentNotes || 'Sin observaciones' }}</p>
-              <a [routerLink]="['/app/exports/patients', item.id, 'pdf-preview']" class="inline-block text-sm font-medium text-teal-700 hover:underline">
+              <a [routerLink]="['/app/exports/patients', item.id, 'pdf-preview']" class="fc-link fc-link-medium inline-block">
                 Ver preview PDF
               </a>
             </article>
@@ -148,7 +149,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
             <section class="space-y-3">
               <div class="flex items-center justify-between gap-3">
                 <h2 class="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Timeline de sesiones</h2>
-                <a [routerLink]="['/app/patients', item.id, 'sessions', 'new']" class="text-sm font-medium text-teal-700 hover:underline">Nueva sesion</a>
+                <a [routerLink]="['/app/patients', item.id, 'sessions', 'new']" class="fc-link fc-link-medium">Nueva sesion</a>
               </div>
 
               <div class="fc-card grid gap-2 p-3 text-sm sm:grid-cols-3">
@@ -377,7 +378,7 @@ export class PatientDetailPageComponent {
 
   protected selectTab(tab: PatientTab): void {
     if (this.isLockedTab(tab)) {
-      this.toastService.warning(TOAST_COPY.plan.premiumOnly);
+      this.toastService.warning(TOAST_COPY.plan.proOnly);
       return;
     }
 

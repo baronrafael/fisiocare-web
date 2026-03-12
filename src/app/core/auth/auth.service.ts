@@ -39,7 +39,7 @@ export class AuthService {
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  setPlan(plan: 'free' | 'premium'): void {
+  setPlan(plan: 'free' | 'pro'): void {
     const currentUser = this.userSignal();
     if (!currentUser) {
       return;
@@ -57,7 +57,33 @@ export class AuthService {
   private restoreUser(): AuthUser | null {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? (JSON.parse(raw) as AuthUser) : null;
+      const parsed = raw
+        ? (JSON.parse(raw) as {
+            id?: unknown;
+            fullName?: unknown;
+            email?: unknown;
+            plan?: unknown;
+          })
+        : null;
+
+      if (
+        !parsed ||
+        typeof parsed.id !== 'string' ||
+        typeof parsed.fullName !== 'string' ||
+        typeof parsed.email !== 'string' ||
+        typeof parsed.plan !== 'string'
+      ) {
+        return null;
+      }
+
+      const normalizedPlan: AuthUser['plan'] = parsed.plan === 'premium' || parsed.plan === 'pro' ? 'pro' : 'free';
+
+      return {
+        id: parsed.id,
+        fullName: parsed.fullName,
+        email: parsed.email,
+        plan: normalizedPlan
+      };
     } catch {
       return null;
     }

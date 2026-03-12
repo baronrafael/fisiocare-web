@@ -1,8 +1,9 @@
 <main class="auth-shell">
   <section class="fc-card auth-card">
-    <p class="auth-brand">FisioCare</p>
-    <h1 class="auth-title">Iniciar sesion</h1>
-    <p class="auth-subtitle">Accede a tu practica clinica desde cualquier lugar.</p>
+    <header class="auth-header">
+      <img src="logo.png" alt="FISIOCARE" class="auth-logo" />
+      <p class="auth-subtitle">Gestiona pacientes, sesiones y seguimiento en un solo lugar.</p>
+    </header>
 
     <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
       <fc-input-field
@@ -15,7 +16,7 @@
       />
 
       <fc-input-field
-        label="Contrasena"
+        label="Contraseña"
         type="password"
         name="password"
         [value]="password()"
@@ -23,12 +24,12 @@
         (valueChange)="password.set($event)"
       />
 
-      <fc-button type="submit" [block]="true">Entrar</fc-button>
+      <fc-button type="submit" [block]="true">Iniciar sesión</fc-button>
     </form>
 
-    <div class="mt-5 flex items-center justify-between text-sm">
-      <a routerLink="/auth/forgot-password" class="text-teal-700 hover:underline">Recuperar contrasena</a>
-      <a routerLink="/auth/register" class="text-slate-700 hover:underline">Crear cuenta</a>
+    <div class="auth-secondary-actions mt-4">
+      <fc-link-button variant="ghost" size="xs" [block]="true" [routerLink]="'/auth/forgot-password'">Recuperar contraseña</fc-link-button>
+      <fc-link-button variant="ghost" size="xs" [block]="true" [routerLink]="'/auth/register'">Crear cuenta</fc-link-button>
     </div>
   </section>
 </main>
