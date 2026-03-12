@@ -35,14 +35,6 @@ import { StateCardComponent } from '../../../shared/ui/state-card/state-card.com
         </article>
       </div>
 
-      <article class="fc-card space-y-2 p-4 text-sm">
-        <p class="font-semibold text-slate-800">Plan {{ planService.plan() === 'free' ? 'Free' : 'Premium' }}</p>
-        <p class="text-slate-600">Uso de pacientes: {{ patientUsage() }}</p>
-        @if (limitReached()) {
-          <p class="text-amber-700">Llegaste al limite del plan. Actualiza para seguir cargando pacientes.</p>
-        }
-      </article>
-
       <div class="grid gap-3 md:grid-cols-2">
         <article class="fc-card p-4">
           <h2 class="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Ultimos pacientes actualizados</h2>

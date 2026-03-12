@@ -32,17 +32,19 @@ import { StateCardComponent } from '../../../shared/ui/state-card/state-card.com
         </button>
       </header>
 
-      <article class="fc-card space-y-2 p-4 text-sm">
-        <div class="flex items-center justify-between gap-2">
-          <p class="font-semibold text-slate-800">Uso de pacientes</p>
-          <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{{ patientUsage() }}</span>
-        </div>
+      @if (isFreePlan()) {
         @if (patientLimitReached()) {
-          <p class="text-amber-700">Limite del plan Free alcanzado. Actualiza tu plan para cargar mas pacientes.</p>
+          <article class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            Limite del plan Free alcanzado. Actualiza tu plan para cargar mas pacientes.
+            <a routerLink="/app/account" class="ml-2 font-semibold underline">Ver planes</a>
+          </article>
         } @else {
-          <p class="text-slate-600">Plan Free permite hasta 10 pacientes activos en la cuenta.</p>
+          <div class="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+            <span>Uso del plan Free: {{ patientUsage() }}</span>
+            <a routerLink="/app/account" class="font-semibold text-slate-700 hover:underline">Plan</a>
+          </div>
         }
-      </article>
+      }
 
       <div class="fc-card space-y-3 p-4">
         <input
@@ -126,6 +128,8 @@ export class PatientsPageComponent {
   protected readonly patientUsage = computed(() =>
     this.planService.patientUsageLabel(this.patientsRepository.patients().length)
   );
+
+  protected readonly isFreePlan = computed(() => this.planService.plan() === 'free');
 
   protected readonly patientLimitReached = computed(() =>
     this.planService.isPatientLimitReached(this.patientsRepository.patients().length)

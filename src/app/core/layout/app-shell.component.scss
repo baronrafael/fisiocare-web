@@ -3,14 +3,28 @@
 }
 
 @media (min-width: 768px) {
+  .shell-root {
+    display: flex;
+    height: 100dvh;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
   .shell-layout {
+    flex: 1;
+    min-height: 0;
     display: grid;
-    min-height: calc(100dvh - 3.5rem);
     grid-template-columns: 240px 1fr;
+    overflow: hidden;
     transition: grid-template-columns 180ms ease;
   }
 
   .shell-layout.shell-layout-collapsed {
     grid-template-columns: 72px 1fr;
+  }
+
+  .shell-layout > section {
+    min-height: 0;
+    overflow-y: auto;
   }
 }

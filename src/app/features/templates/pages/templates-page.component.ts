@@ -27,7 +27,7 @@ import { TemplatesRepository } from '../../../mocks/repositories/templates.repos
       </header>
 
       @if (!planService.canUseTemplates()) {
-        <article class="fc-card border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <article class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
           Las plantillas son una funcionalidad Premium. Actualiza tu plan para crear y reutilizar estructuras de sesion.
           <a routerLink="/app/account" class="ml-2 font-semibold underline">Ver planes</a>
         </article>
