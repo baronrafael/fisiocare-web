@@ -1,16 +1,27 @@
 <main class="auth-shell">
   <section class="fc-card auth-card">
-    <h1 class="auth-title">Crear cuenta</h1>
-    <p class="auth-subtitle">Comienza a organizar tu seguimiento clinico en minutos.</p>
+    <header class="auth-header">
+      <img src="logo.png" alt="FISIOCARE" class="auth-logo" />
+      <p class="auth-subtitle">Crea tu cuenta y empieza a organizar tu seguimiento clínico.</p>
+    </header>
 
     <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
       <fc-input-field
-        label="Nombre completo"
+        label="Nombre(s)"
         type="text"
-        name="fullName"
-        [value]="fullName()"
+        name="firstName"
+        [value]="firstName()"
         [required]="true"
-        (valueChange)="fullName.set($event)"
+        (valueChange)="firstName.set($event)"
+      />
+
+      <fc-input-field
+        label="Apellido(s)"
+        type="text"
+        name="lastName"
+        [value]="lastName()"
+        [required]="true"
+        (valueChange)="lastName.set($event)"
       />
 
       <fc-input-field
@@ -23,7 +34,7 @@
       />
 
       <fc-input-field
-        label="Contrasena"
+        label="Contraseña"
         type="password"
         name="password"
         [value]="password()"
@@ -31,12 +42,24 @@
         (valueChange)="password.set($event)"
       />
 
+      <fc-input-field
+        label="Confirmar contraseña"
+        type="password"
+        name="confirmPassword"
+        [value]="confirmPassword()"
+        [required]="true"
+        (valueChange)="confirmPassword.set($event)"
+      />
+
+      @if (passwordsMismatch()) {
+        <p class="text-sm text-red-700">Las contraseñas no coinciden.</p>
+      }
+
       <fc-button type="submit" [block]="true">Crear y entrar</fc-button>
     </form>
 
-    <p class="mt-5 text-sm text-slate-600">
-      Ya tienes cuenta?
-      <a routerLink="/auth/login" class="fc-link">Inicia sesion</a>
-    </p>
+    <div class="mt-4">
+      <fc-link-button variant="ghost" size="sm" [block]="true" [routerLink]="'/auth/login'">Iniciar sesión</fc-link-button>
+    </div>
   </section>
 </main>
