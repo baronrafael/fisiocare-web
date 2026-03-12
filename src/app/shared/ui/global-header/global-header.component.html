@@ -13,6 +13,19 @@
       >
         {{ plan() === 'free' ? 'Free' : 'Premium' }}
       </span>
+      <button
+        type="button"
+        class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 md:hidden"
+        aria-label="Cerrar sesion"
+        title="Cerrar sesion"
+        (click)="onLogout()"
+      >
+        <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+      </button>
     </div>
   </div>
 

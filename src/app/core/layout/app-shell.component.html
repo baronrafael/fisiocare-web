@@ -3,6 +3,7 @@
     [fullName]="userFullName()"
     [plan]="activePlan()"
     [patientLimitReached]="patientLimitReached()"
+    (logoutRequested)="logout()"
   />
 
   <div class="shell-layout" [class.shell-layout-collapsed]="isNavCollapsed()">
