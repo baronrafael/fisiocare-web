@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ContactLogType } from '../../../core/models/contact-log.model';
 import { PatientFileType } from '../../../core/models/patient-file.model';
 import { TOAST_COPY } from '../../../core/notifications/toast-copy';
@@ -9,6 +9,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 import { PatientFilesRepository } from '../../../mocks/repositories/patient-files.repository';
 import { ContactLogsRepository } from '../../../mocks/repositories/contact-logs.repository';
 import { SessionsRepository } from '../../../mocks/repositories/sessions.repository';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { SessionTimelineComponent } from '../../../shared/ui/session-timeline/session-timeline.component';
 
@@ -17,7 +18,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
 
 @Component({
   selector: 'fc-patient-detail-page',
-  imports: [RouterLink, LinkButtonComponent, SessionTimelineComponent],
+  imports: [RouterLink, ConfirmDialogComponent, LinkButtonComponent, SessionTimelineComponent],
   template: `
     @if (patient(); as item) {
       <section class="space-y-4">
@@ -28,6 +29,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
           <div class="mt-3 flex gap-2">
             <fc-link-button variant="ghost" size="sm" [routerLink]="['/app/patients', item.id, 'edit']">Editar ficha</fc-link-button>
             <fc-link-button variant="primary" size="sm" [routerLink]="['/app/patients', item.id, 'sessions', 'new']">Registrar sesion</fc-link-button>
+            <button type="button" class="fc-btn fc-btn-danger text-sm" (click)="openDeleteModal(item.id, item.fullName)">Eliminar paciente</button>
           </div>
         </header>
 
@@ -216,6 +218,18 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
             </article>
           }
         }
+
+        <fc-confirm-dialog
+          [open]="!!patientToDelete()"
+          [title]="'Eliminar paciente'"
+          [message]="deleteMessage()"
+          [confirmLabel]="'Eliminar'"
+          [cancelLabel]="'Cancelar'"
+          [destructive]="true"
+          [busy]="isDeletingPatient()"
+          (confirm)="confirmDeletePatient()"
+          (cancel)="cancelDeletePatient()"
+        />
       </section>
     } @else {
       <article class="fc-card p-6 text-center text-sm text-slate-600">Paciente no encontrado.</article>
@@ -224,6 +238,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
 })
 export class PatientDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly patientsRepository = inject(PatientsRepository);
   private readonly sessionsRepository = inject(SessionsRepository);
   private readonly contactLogsRepository = inject(ContactLogsRepository);
@@ -252,6 +267,8 @@ export class PatientDetailPageComponent {
   protected readonly sessionTypeFilter = signal<SessionFilterType>('all');
   protected readonly sessionDateFrom = signal('');
   protected readonly sessionDateTo = signal('');
+  protected readonly patientToDelete = signal<{ id: string; fullName: string } | null>(null);
+  protected readonly isDeletingPatient = signal(false);
 
   protected readonly lockedTabs: ReadonlyArray<PatientTab> = ['clinical', 'files', 'context', 'checklist', 'administrative'];
 
@@ -286,6 +303,15 @@ export class PatientDetailPageComponent {
   protected readonly patientFiles = computed(() => {
     const patient = this.patient();
     return patient ? this.patientFilesRepository.findByPatientId(patient.id) : [];
+  });
+
+  protected readonly deleteMessage = computed(() => {
+    const patient = this.patientToDelete();
+    if (!patient) {
+      return 'Esta accion eliminara el paciente seleccionado y no se puede deshacer.';
+    }
+
+    return `Esta accion eliminara a ${patient.fullName} y no se puede deshacer.`;
   });
 
   protected contactTypeLabel(type: ContactLogType): string {
@@ -404,6 +430,40 @@ export class PatientDetailPageComponent {
       default:
         return 'Otro';
     }
+  }
+
+  protected openDeleteModal(patientId: string, fullName: string): void {
+    this.patientToDelete.set({ id: patientId, fullName });
+  }
+
+  protected cancelDeletePatient(): void {
+    if (this.isDeletingPatient()) {
+      return;
+    }
+
+    this.patientToDelete.set(null);
+  }
+
+  protected confirmDeletePatient(): void {
+    const patient = this.patientToDelete();
+    if (!patient || this.isDeletingPatient()) {
+      return;
+    }
+
+    this.isDeletingPatient.set(true);
+    this.patientsRepository.delete(patient.id).subscribe({
+      next: () => {
+        this.isDeletingPatient.set(false);
+        this.patientToDelete.set(null);
+        this.toastService.success(TOAST_COPY.patient.deleted);
+        this.router.navigateByUrl('/app/patients');
+      },
+      error: () => {
+        this.isDeletingPatient.set(false);
+        this.patientToDelete.set(null);
+        this.toastService.warning(TOAST_COPY.patient.deleteError);
+      }
+    });
   }
 
   constructor() {

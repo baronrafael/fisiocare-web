@@ -6,6 +6,8 @@ export const TOAST_COPY = {
   patient: {
     created: 'Paciente creado correctamente.',
     updated: 'Paciente actualizado.',
+    deleted: 'Paciente eliminado.',
+    deleteError: 'No se pudo eliminar el paciente.',
     limitReached: 'Limite Free alcanzado. Activa Pro para agregar mas pacientes.'
   },
   plan: {

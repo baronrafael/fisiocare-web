@@ -5,12 +5,13 @@ import { TOAST_COPY } from '../../../core/notifications/toast-copy';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { PlanService } from '../../../core/subscription/plan.service';
 import { PatientsRepository } from '../../../mocks/repositories/patients.repository';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { StateCardComponent } from '../../../shared/ui/state-card/state-card.component';
 
 @Component({
   selector: 'fc-patients-page',
-  imports: [RouterLink, LinkButtonComponent, StateCardComponent],
+  imports: [RouterLink, ConfirmDialogComponent, LinkButtonComponent, StateCardComponent],
   template: `
     <section class="space-y-4">
       @if (uiState() === 'loading') {
@@ -88,12 +89,25 @@ import { StateCardComponent } from '../../../shared/ui/state-card/state-card.com
             <div class="mt-3 flex gap-2">
               <fc-link-button variant="ghost" size="sm" [routerLink]="['/app/patients', patient.id]">Ver ficha</fc-link-button>
               <fc-link-button variant="primary" size="sm" [routerLink]="['/app/patients', patient.id, 'sessions', 'new']">Nueva sesion</fc-link-button>
+              <button type="button" class="fc-btn fc-btn-danger text-sm" (click)="openDeleteModal(patient.id, patient.fullName)">Eliminar</button>
             </div>
           </article>
         } @empty {
           <fc-state-card title="Sin pacientes" message="No hay pacientes que coincidan con tu busqueda." type="empty" />
         }
       </div>
+
+      <fc-confirm-dialog
+        [open]="!!patientToDelete()"
+        [title]="'Eliminar paciente'"
+        [message]="deleteMessage()"
+        [confirmLabel]="'Eliminar'"
+        [cancelLabel]="'Cancelar'"
+        [destructive]="true"
+        [busy]="isDeletingPatient()"
+        (confirm)="confirmDeletePatient()"
+        (cancel)="cancelDeletePatient()"
+      />
       }
     </section>
   `
@@ -108,6 +122,8 @@ export class PatientsPageComponent {
   protected readonly query = signal('');
   protected readonly statusFilter = signal<'all' | PatientStatus>('all');
   protected readonly uiState = signal<'ready' | 'loading' | 'error'>('ready');
+  protected readonly patientToDelete = signal<{ id: string; fullName: string } | null>(null);
+  protected readonly isDeletingPatient = signal(false);
 
   protected readonly statuses = [
     { value: 'all' as const, label: 'Todos' },
@@ -136,6 +152,15 @@ export class PatientsPageComponent {
     this.planService.isPatientLimitReached(this.patientsRepository.patients().length)
   );
 
+  protected readonly deleteMessage = computed(() => {
+    const patient = this.patientToDelete();
+    if (!patient) {
+      return 'Esta accion eliminara el paciente seleccionado y no se puede deshacer.';
+    }
+
+    return `Esta accion eliminara a ${patient.fullName} y no se puede deshacer.`;
+  });
+
   constructor() {
     const state = this.route.snapshot.queryParamMap.get('state');
     if (state === 'loading' || state === 'error') {
@@ -163,5 +188,38 @@ export class PatientsPageComponent {
     }
 
     this.router.navigateByUrl('/app/patients/new');
+  }
+
+  protected openDeleteModal(patientId: string, fullName: string): void {
+    this.patientToDelete.set({ id: patientId, fullName });
+  }
+
+  protected cancelDeletePatient(): void {
+    if (this.isDeletingPatient()) {
+      return;
+    }
+
+    this.patientToDelete.set(null);
+  }
+
+  protected confirmDeletePatient(): void {
+    const patient = this.patientToDelete();
+    if (!patient || this.isDeletingPatient()) {
+      return;
+    }
+
+    this.isDeletingPatient.set(true);
+    this.patientsRepository.delete(patient.id).subscribe({
+      next: () => {
+        this.isDeletingPatient.set(false);
+        this.patientToDelete.set(null);
+        this.toastService.success(TOAST_COPY.patient.deleted);
+      },
+      error: () => {
+        this.isDeletingPatient.set(false);
+        this.patientToDelete.set(null);
+        this.toastService.warning(TOAST_COPY.patient.deleteError);
+      }
+    });
   }
 }

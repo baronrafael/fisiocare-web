@@ -107,6 +107,15 @@ export class PatientsRepository {
     );
   }
 
+  delete(patientId: string): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/patients/${patientId}/`).pipe(
+      map(() => void 0),
+      tap(() => {
+        this.patientsSignal.update((patients) => patients.filter((patient) => patient.id !== patientId));
+      })
+    );
+  }
+
   touchLastSession(patientId: string, sessionAt: string): void {
     this.patientsSignal.update((patients) =>
       patients.map((patient) =>
