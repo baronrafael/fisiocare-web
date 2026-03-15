@@ -67,7 +67,7 @@ export class RegisterPageComponent {
         error: (error: unknown) => {
           this.isSubmitting.set(false);
           if (error instanceof HttpErrorResponse && error.status === 400) {
-            this.registerError.set('No se pudo crear la cuenta. Revisa los datos e intenta nuevamente.');
+            this.registerError.set(this.getRegisterErrorMessage(error.error));
             return;
           }
 
@@ -79,5 +79,55 @@ export class RegisterPageComponent {
   protected onEnterSubmit(event: Event): void {
     event.preventDefault();
     this.onSubmit();
+  }
+
+  private getRegisterErrorMessage(payload: unknown): string {
+    if (!payload || typeof payload !== 'object') {
+      return 'No se pudo crear la cuenta. Revisa los datos e intenta nuevamente.';
+    }
+
+    const errorMap = payload as Record<string, unknown>;
+    const emailMessage = this.firstError(errorMap['email']);
+    if (emailMessage) {
+      if (emailMessage.toLowerCase().includes('ya existe')) {
+        return 'Ya existe una cuenta con este correo.';
+      }
+
+      return 'Revisa el correo ingresado.';
+    }
+
+    const passwordMessage = this.firstError(errorMap['password']);
+    if (passwordMessage) {
+      return 'Revisa la contraseña ingresada.';
+    }
+
+    const firstNameMessage = this.firstError(errorMap['first_name']);
+    if (firstNameMessage) {
+      return 'Revisa el nombre ingresado.';
+    }
+
+    const lastNameMessage = this.firstError(errorMap['last_name']);
+    if (lastNameMessage) {
+      return 'Revisa los apellidos ingresados.';
+    }
+
+    const nonFieldMessage = this.firstError(errorMap['detail']) || this.firstError(errorMap['non_field_errors']);
+    if (nonFieldMessage) {
+      return nonFieldMessage;
+    }
+
+    return 'No se pudo crear la cuenta. Revisa los datos e intenta nuevamente.';
+  }
+
+  private firstError(value: unknown): string | null {
+    if (Array.isArray(value) && typeof value[0] === 'string') {
+      return value[0];
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    return null;
   }
 }
