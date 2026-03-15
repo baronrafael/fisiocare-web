@@ -18,7 +18,7 @@ export class LoginPageComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected readonly email = signal('fisio@demo.com');
+  protected readonly email = signal('');
   protected readonly password = signal('');
   protected readonly isSubmitting = signal(false);
   protected readonly authError = signal('');
