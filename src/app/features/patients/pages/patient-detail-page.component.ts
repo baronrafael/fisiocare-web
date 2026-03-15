@@ -80,6 +80,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
           }
 
           @case ('files') {
+            <!-- TODO(backend): add patient files endpoints and replace current mock repository. -->
             <article class="space-y-3">
               <div class="fc-card space-y-2 p-4">
                 <p class="text-sm font-semibold">Adjuntar estudio/documento</p>
@@ -118,6 +119,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
               <p><strong>Detalle acompanante:</strong> {{ item.companion?.description || 'Sin detalle' }}</p>
               <p><strong>Mascotas:</strong> {{ item.pets?.present ? 'Si' : 'No' }}</p>
               <p><strong>Espacio de sesion:</strong> {{ item.availableSpace || 'Sin detalle' }}</p>
+              <!-- TODO(backend): add contextual notes field in patients API response. -->
               <p><strong>Observaciones contextuales:</strong> {{ item.contextualNotes || 'Sin observaciones' }}</p>
             </article>
           }
@@ -134,6 +136,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
           }
 
           @case ('checklist') {
+            <!-- TODO(backend): add patient intake checklist fields/endpoints. -->
             <article class="fc-card space-y-3 p-4 text-sm text-slate-700">
               <h2 class="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Checklist de ingreso</h2>
               <p><strong>Direccion confirmada:</strong> {{ item.intakeChecklist?.addressConfirmed ? 'Si' : 'No' }}</p>
@@ -178,6 +181,7 @@ type SessionFilterType = 'all' | 'physical' | 'cognitive' | 'mixed';
           }
 
           @case ('contacts') {
+            <!-- TODO(backend): add contact logs endpoints and replace mock repository. -->
             <article class="space-y-3">
               <div class="fc-card space-y-2 p-4">
                 <p class="text-sm font-semibold">Agregar evento</p>
@@ -403,6 +407,15 @@ export class PatientDetailPageComponent {
   }
 
   constructor() {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId) {
+      this.patientsRepository.loadById(patientId).subscribe({
+        error: () => {
+          // keep "Paciente no encontrado" fallback in template
+        }
+      });
+    }
+
     const tab = this.route.snapshot.queryParamMap.get('tab');
     if (tab === 'sessions') {
       this.activeTab.set('sessions');

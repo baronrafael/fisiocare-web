@@ -143,6 +143,17 @@ export class PdfPreviewPageComponent {
     return patient ? this.contactLogsRepository.findByPatientId(patient.id) : [];
   });
 
+  constructor() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.patientsRepository.loadById(id).subscribe({
+        error: () => {
+          // keep "Paciente no encontrado" fallback in template
+        }
+      });
+    }
+  }
+
   protected downloadMockPdf(): void {
     this.toastService.info('Descarga PDF mock disponible al conectar backend.');
   }

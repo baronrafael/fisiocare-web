@@ -5,7 +5,7 @@
       <p class="auth-subtitle">Crea tu cuenta y empieza a organizar tu seguimiento clínico.</p>
     </header>
 
-    <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
+    <form class="mt-6 space-y-4" novalidate (ngSubmit)="onSubmit()" (keydown.enter)="onEnterSubmit($event)">
       <fc-input-field
         label="Nombre(s)"
         type="text"
@@ -55,7 +55,13 @@
         <p class="text-sm text-red-700">Las contraseñas no coinciden.</p>
       }
 
-      <fc-button type="submit" [block]="true">Crear y entrar</fc-button>
+      @if (registerError()) {
+        <p class="text-sm text-red-700">{{ registerError() }}</p>
+      }
+
+      <fc-button type="submit" [block]="true" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Creando cuenta...' : 'Crear y entrar' }}
+      </fc-button>
     </form>
 
     <div class="mt-4">

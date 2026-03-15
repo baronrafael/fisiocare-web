@@ -140,7 +140,14 @@ export class PatientsPageComponent {
     const state = this.route.snapshot.queryParamMap.get('state');
     if (state === 'loading' || state === 'error') {
       this.uiState.set(state);
+      return;
     }
+
+    this.uiState.set('loading');
+    this.patientsRepository.loadAll().subscribe({
+      next: () => this.uiState.set('ready'),
+      error: () => this.uiState.set('error')
+    });
   }
 
   protected onQueryChange(event: Event): void {

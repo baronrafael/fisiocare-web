@@ -5,7 +5,7 @@
       <p class="auth-subtitle">Gestiona pacientes, sesiones y seguimiento en un solo lugar.</p>
     </header>
 
-    <form class="mt-6 space-y-4" (ngSubmit)="onSubmit()">
+    <form class="mt-6 space-y-4" novalidate (ngSubmit)="onSubmit()">
       <fc-input-field
         label="Correo"
         type="email"
@@ -24,7 +24,13 @@
         (valueChange)="password.set($event)"
       />
 
-      <fc-button type="submit" [block]="true">Iniciar sesión</fc-button>
+      <fc-button type="submit" [block]="true" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Ingresando...' : 'Iniciar sesión' }}
+      </fc-button>
+
+      @if (authError()) {
+        <p class="text-sm text-red-700">{{ authError() }}</p>
+      }
     </form>
 
     <div class="auth-secondary-actions mt-4">

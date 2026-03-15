@@ -38,6 +38,14 @@ export class AppShellComponent {
     this.planService.isPatientLimitReached(this.patientsRepository.patients().length)
   );
 
+  constructor() {
+    this.patientsRepository.loadAll().subscribe({
+      error: () => {
+        // patient pages handle user-facing load errors
+      }
+    });
+  }
+
   protected logout(): void {
     this.authService.logout();
     this.toastService.info(TOAST_COPY.auth.logout);

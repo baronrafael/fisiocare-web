@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CareMode, Patient, PatientStatus } from '../../../core/models/patient.model';
@@ -57,6 +58,14 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
           }
 
           <label class="block text-sm font-medium text-slate-700">
+            Telefono principal
+            <input class="fc-input mt-1" type="text" formControlName="primaryPhone" />
+          </label>
+          @if (hasError('primaryPhone', 'required')) {
+            <p class="text-xs text-red-700">El telefono principal es obligatorio.</p>
+          }
+
+          <label class="block text-sm font-medium text-slate-700">
             Modalidad de atencion
             <select class="fc-input mt-1" formControlName="careMode">
               <option value="home">Domicilio</option>
@@ -72,6 +81,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 
           @if (showClinical()) {
             <div class="space-y-2 rounded-xl border border-slate-200 p-3">
+              <!-- TODO(backend): add studies/complementary observations fields in patients API. -->
               <label class="block text-sm font-medium text-slate-700">
                 Observaciones clinicas iniciales
                 <textarea class="fc-input mt-1 min-h-20" formControlName="initialClinicalNotes"></textarea>
@@ -92,10 +102,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 
           @if (showContext()) {
             <div class="space-y-2 rounded-xl border border-slate-200 p-3">
-              <label class="block text-sm font-medium text-slate-700">
-                Telefono principal
-                <input class="fc-input mt-1" type="text" formControlName="primaryPhone" />
-              </label>
+              <!-- TODO(backend): add contextual_notes in patients API and include in detail responses. -->
               <label class="block text-sm font-medium text-slate-700">
                 Telefono secundario
                 <input class="fc-input mt-1" type="text" formControlName="secondaryPhone" />
@@ -166,6 +173,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 
           @if (showChecklist()) {
             <div class="space-y-2 rounded-xl border border-slate-200 p-3">
+              <!-- TODO(backend): add intake checklist fields in patients API. -->
               <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
                 <input type="checkbox" formControlName="checklistAddressConfirmed" /> Direccion confirmada
               </label>
@@ -194,7 +202,7 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
         }
 
         <div class="sticky bottom-18 rounded-xl bg-white/90 p-2 backdrop-blur md:static md:bg-transparent md:p-0">
-          <button type="submit" class="fc-btn fc-btn-primary w-full" [disabled]="form.invalid">Guardar paciente (mock)</button>
+          <button type="submit" class="fc-btn fc-btn-primary w-full" [disabled]="form.invalid">Guardar paciente</button>
         </div>
 
         @if (limitError()) {
@@ -205,6 +213,10 @@ import { PatientsRepository } from '../../../mocks/repositories/patients.reposit
 
         @if (saved()) {
           <p class="fc-alert-success text-sm">Paciente guardado correctamente.</p>
+        }
+
+        @if (saveError()) {
+          <p class="text-sm text-red-700">{{ saveError() }}</p>
         }
       </form>
     </section>
@@ -224,6 +236,7 @@ export class PatientEditorPageComponent {
   protected readonly showAdministrative = signal(false);
   protected readonly saved = signal(false);
   protected readonly limitError = signal(false);
+  protected readonly saveError = signal('');
 
   private readonly patientId = this.route.snapshot.paramMap.get('id');
 
@@ -233,7 +246,7 @@ export class PatientEditorPageComponent {
     status: ['active' as PatientStatus, Validators.required],
     diagnosis: ['', Validators.required],
     careMode: ['home' as CareMode, Validators.required],
-    primaryPhone: [''],
+    primaryPhone: ['', Validators.required],
     secondaryPhone: [''],
     address: [''],
     reference: [''],
@@ -266,11 +279,13 @@ export class PatientEditorPageComponent {
       return;
     }
 
-    const patient = this.patientsRepository.findById(this.patientId);
-    if (!patient) {
-      return;
-    }
+    this.patientsRepository.loadById(this.patientId).subscribe({
+      next: (patient) => this.patchFormFromPatient(patient),
+      error: () => this.saveError.set('No se pudo cargar el paciente para editar.')
+    });
+  }
 
+  private patchFormFromPatient(patient: Patient): void {
     this.form.patchValue({
       fullName: patient.fullName,
       age: patient.age,
@@ -309,6 +324,11 @@ export class PatientEditorPageComponent {
     }
 
     const value = this.form.getRawValue();
+    if (!this.optional(value.primaryPhone)) {
+      this.form.get('primaryPhone')?.setErrors({ required: true });
+      this.form.get('primaryPhone')?.markAsTouched();
+      return;
+    }
 
     if (!this.patientId && this.planService.isPatientLimitReached(this.patientsRepository.patients().length)) {
       this.limitError.set(true);
@@ -317,6 +337,7 @@ export class PatientEditorPageComponent {
     }
 
     this.limitError.set(false);
+    this.saveError.set('');
     const includeAdvancedProfile = this.planService.canUseAdvancedPatientProfile();
 
     const payload: Omit<Patient, 'id'> = {
@@ -325,7 +346,7 @@ export class PatientEditorPageComponent {
       status: value.status ?? 'active',
       diagnosis: value.diagnosis?.trim() || 'Sin diagnostico',
       careMode: value.careMode ?? 'home',
-      primaryPhone: includeAdvancedProfile ? this.optional(value.primaryPhone) : undefined,
+      primaryPhone: this.optional(value.primaryPhone),
       secondaryPhone: includeAdvancedProfile ? this.optional(value.secondaryPhone) : undefined,
       address: includeAdvancedProfile ? this.optional(value.address) : undefined,
       reference: includeAdvancedProfile ? this.optional(value.reference) : undefined,
@@ -359,26 +380,30 @@ export class PatientEditorPageComponent {
       paymentMode: includeAdvancedProfile ? (value.paymentMode as Patient['paymentMode']) || undefined : undefined,
       paymentNotes: includeAdvancedProfile ? this.optional(value.paymentNotes) : undefined,
       persistentNotes: includeAdvancedProfile ? this.optional(value.persistentNotes) : undefined,
+      // TODO(backend): expose patient last session date or summary in patients API.
       lastSessionAt: this.patientId
         ? this.patientsRepository.findById(this.patientId)?.lastSessionAt || 'Sin sesiones'
         : 'Sin sesiones'
     };
 
-    if (this.patientId) {
-      this.patientsRepository.update(this.patientId, payload);
-      this.toastService.success(TOAST_COPY.patient.updated);
-    } else {
-      const newId = this.patientsRepository.nextId();
-      this.patientsRepository.create({
-        id: newId,
-        ...payload
-      });
-      this.toastService.success(TOAST_COPY.patient.created);
-      this.goToDetail(newId);
-      return;
-    }
+    const request$ = this.patientId
+      ? this.patientsRepository.update(this.patientId, payload)
+      : this.patientsRepository.create(payload);
 
-    this.goToDetail(this.patientId);
+    request$.subscribe({
+      next: (patient) => {
+        this.toastService.success(this.patientId ? TOAST_COPY.patient.updated : TOAST_COPY.patient.created);
+        this.goToDetail(patient.id);
+      },
+      error: (error: unknown) => {
+        if (error instanceof HttpErrorResponse && error.status === 400) {
+          this.saveError.set('No se pudo guardar el paciente. Revisa los datos e intenta nuevamente.');
+          return;
+        }
+
+        this.saveError.set('No se pudo guardar el paciente en este momento.');
+      }
+    });
   }
 
   private goToDetail(patientId: string): void {
